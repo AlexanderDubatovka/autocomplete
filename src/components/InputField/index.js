@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import API from '../../commons/API'
 import Users from '../Users'
+import { fetchData } from '../../store/fetchDataFromAPI'
+import { useDispatch, useSelector } from 'react-redux'
 import './index.css'
 
-import { useDispatch, useSelector } from 'react-redux'
-import { fetchData } from '../../store/data'
-
 const InputField = () => {
-  const [display, setDisplay] = useState(false)
-  const [users, setUsers] = useState([])
   const [inputText, setInputText] = useState('')
   const [filteredUsers, setFilteredUsers] = useState([])
 
@@ -16,32 +12,23 @@ const InputField = () => {
   const data = useSelector(state => state.data.data)
 
   useEffect(() => {
-    API
-      .get('/')
-      .then(res => {
-        setUsers(res.data)
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }, [])
+    dispatch(fetchData())
+  }, [dispatch])
 
   useEffect(() => {
     setFilteredUsers(
-      users.filter(user =>
+      data.filter(user =>
         user.username.toLowerCase().includes(inputText.toLowerCase())
       )
     )
-  }, [inputText, users])
+  }, [inputText, data])
 
   const textHandler = event => {
     setInputText(event.target.value)
-    setDisplay(true)
   }
 
   const updateHandler = name => {
     setInputText(name)
-    setDisplay(false)
   }
 
   return (
@@ -53,35 +40,18 @@ const InputField = () => {
         onChange={textHandler}
         value={inputText}
       />
-      { display &&
-      filteredUsers.map( (users, i) => ( 
+
+      { filteredUsers.map(users => ( 
           <div onClick={() => updateHandler(users.username)}>
-            { inputText.length === 0 
+            { inputText.length === 0 || inputText.length === users.username.length
               ? '' 
               : <Users 
-                  key={i}
-                  {...users} 
+                  {...users}
+                  key={Date.now().toString()}
                 />
             }
           </div>
-      ) ) 
-      }
-
-      <br />
-      <button onClick={() => dispatch(fetchData())}>Show all usernames</button>
-      <br />
-      <div>
-        {data.map((item, i) => 
-          <div 
-            key={i} 
-            onClick={() => updateHandler(item.username)}
-            style={{cursor: 'pointer'}}
-          >
-            {item.username}
-          </div>)
-        }
-      </div>
-
+      )) } 
     </>
   )
 }

@@ -4,7 +4,7 @@ const initialState = {
 
 const GET_DATA = 'GET_DATA'
 
-export const reducers = (state = initialState, action) => {
+export const fetchDataReducer = (state = initialState, action) => {
     switch (action.type) {
       case GET_DATA:
         return {...state, data: [...state.data, ...action.payload]}
