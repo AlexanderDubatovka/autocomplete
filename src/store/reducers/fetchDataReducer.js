@@ -1,8 +1,9 @@
+import { GET_DATA } from '../actionTypes/actionTypes'
+
 const initialState = {
   data: [],
 }
 
-const GET_DATA = 'GET_DATA'
 
 export const fetchDataReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -13,4 +14,3 @@ export const fetchDataReducer = (state = initialState, action) => {
     }
 }
 
-export const addDataAction = payload => ({type: GET_DATA, payload})

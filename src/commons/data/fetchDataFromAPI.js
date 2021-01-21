@@ -1,5 +1,5 @@
-import { addDataAction } from './reducers/fetchDataReducer'
-import API from '../commons/API'
+import { addDataAction } from '../../store/actions/addDataAction'
+import API from './API'
 
 export const fetchData = () => {
     return function(dispatch) {

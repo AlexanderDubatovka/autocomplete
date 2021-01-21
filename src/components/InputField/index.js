@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Users from '../Users'
-import { fetchData } from '../../store/fetchDataFromAPI'
+import { fetchData } from '../../commons/data/fetchDataFromAPI'
 import { useDispatch, useSelector } from 'react-redux'
 import './index.css'
 
@@ -23,34 +23,26 @@ const InputField = () => {
     )
   }, [inputText, data])
 
-  const textHandler = event => {
-    setInputText(event.target.value)
-  }
-
-  const updateHandler = name => {
-    setInputText(name)
-  }
-
   return (
     <>
       <input
         className='input'
         type='text'
         placeholder='username'
-        onChange={textHandler}
+        onChange={event => setInputText(event.target.value)}
         value={inputText}
       />
 
-      { filteredUsers.map(users => ( 
-          <div onClick={() => updateHandler(users.username)}>
-            { inputText.length === 0 || inputText.length === users.username.length
-              ? '' 
-              : <Users 
-                  {...users}
-                  key={Date.now().toString()}
-                />
-            }
-          </div>
+      { filteredUsers.map(user => ( 
+        <div onClick={() => setInputText(user.username)}>
+          { !inputText.length || inputText.length === user.username.length
+            ? '' 
+            : <Users 
+                {...user}
+                key={user.username}
+              />
+          }
+        </div>
       )) } 
     </>
   )
